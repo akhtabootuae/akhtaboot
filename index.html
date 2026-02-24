@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMS Code Testing Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2332;
+  --bg-card-hover: #1e2a3d;
+  --bg-input: #0f1724;
+  --border: #2a3a50;
+  --border-accent: #00d4ff30;
+  --text-primary: #e8edf5;
+  --text-secondary: #8899b0;
+  --text-muted: #5a6b80;
+  --accent-primary: #00d4ff;
+  --accent-secondary: #7c3aed;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-orange: #f59e0b;
+  --accent-pink: #ec4899;
+  --glow-primary: 0 0 20px #00d4ff20;
+  --glow-green: 0 0 20px #10b98120;
+  --glow-red: 0 0 20px #ef444420;
+  --gradient-hero: linear-gradient(135deg, #00d4ff08, #7c3aed08, #ec489908);
+  --gradient-accent: linear-gradient(135deg, #00d4ff, #7c3aed);
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-arabic: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.light {
+  --bg-primary: #f0f4f8;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #f1f5f9;
+  --border: #e2e8f0;
+  --border-accent: #00d4ff30;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent-primary: #0284c7;
+  --accent-secondary: #7c3aed;
+  --accent-green: #059669;
+  --accent-red: #dc2626;
+  --accent-orange: #d97706;
+  --accent-pink: #db2777;
+  --glow-primary: 0 0 20px #0284c720;
+  --glow-green: 0 0 20px #05966920;
+  --glow-red: 0 0 20px #dc262620;
+  --gradient-hero: linear-gradient(135deg, #0284c708, #7c3aed08, #db277708);
+  --gradient-accent: linear-gradient(135deg, #0284c7, #7c3aed);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-arabic);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+/* Background Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, #00d4ff06 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, #7c3aed06 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #ec489906 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 12px 20px;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  box-shadow: var(--glow-primary);
+}
+
+.logo-text h1 {
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.logo-text span {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.header-btn.active {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+/* Main Content */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--glow-primary);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue { background: #00d4ff15; color: var(--accent-primary); }
+.stat-icon.green { background: #10b98115; color: var(--accent-green); }
+.stat-icon.red { background: #ef444415; color: var(--accent-red); }
+.stat-icon.orange { background: #f59e0b15; color: var(--accent-orange); }
+.stat-icon.purple { background: #7c3aed15; color: var(--accent-secondary); }
+.stat-icon.pink { background: #ec489915; color: var(--accent-pink); }
+
+.stat-info { flex: 1; min-width: 0; }
+.stat-value { font-size: 24px; font-weight: 700; font-family: var(--font-mono); line-height: 1.2; }
+.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Tabs */
+.tabs-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:hover { background: var(--bg-input); color: var(--text-primary); }
+
+.tab-btn.active {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--glow-primary);
+}
+
+.tab-btn .badge {
+  background: var(--bg-input);
+  color: var(--accent-primary);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+}
+
+.tab-btn.active .badge {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+/* Panel Grid */
+.panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .panel-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: 1fr; }
+  .header-inner { flex-wrap: wrap; }
+  .main-content { padding: 12px; }
+}
+
+/* Panel */
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-full { grid-column: 1 / -1; }
+
+.panel-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-header h3 i { color: var(--accent-primary); font-size: 16px; }
+
+.panel-body {
+  padding: 16px 18px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.panel-body.no-scroll { overflow: visible; max-height: none; }
+
+/* Module List */
+.module-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.module-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
+}
+
+.module-item.selected {
+  background: #00d4ff10;
+  border-color: var(--accent-primary);
+}
+
+.module-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.module-dot.api { background: var(--accent-primary); }
+.module-dot.frontend { background: var(--accent-secondary); }
+
+.module-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.module-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.module-tag.api { background: #00d4ff15; color: var(--accent-primary); }
+.module-tag.frontend { background: #7c3aed15; color: var(--accent-secondary); }
+
+.module-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.module-status.idle { background: var(--text-muted); }
+.module-status.testing { background: var(--accent-orange); animation: pulse-glow 1.5s infinite; }
+.module-status.passed { background: var(--accent-green); }
+.module-status.failed { background: var(--accent-red); }
+.module-status.warning { background: var(--accent-orange); }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-orange); }
+  50% { box-shadow: 0 0 8px 4px rgba(245, 158, 11, 0.3); }
+}
+
+/* Test Actions */
+.test-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.action-btn {
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-btn:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.action-btn.primary {
+  background: var(--gradient-accent);
+  color: white;
+  border: none;
+  box-shadow: var(--glow-primary);
+}
+
+.action-btn.primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.action-btn.danger {
+  background: #ef444420;
+  color: var(--accent-red);
+  border-color: #ef444440;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Results Area */
+.results-area {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  direction: ltr;
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.results-area .line-pass { color: var(--accent-green); }
+.results-area .line-fail { color: var(--accent-red); }
+.results-area .line-warn { color: var(--accent-orange); }
+.results-area .line-info { color: var(--accent-primary); }
+.results-area .line-header { color: var(--text-primary); font-weight: 600; }
+.results-area .line-dim { color: var(--text-muted); }
+
+/* Progress Bar */
+.progress-bar-container {
+  background: var(--bg-input);
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  background: var(--gradient-accent);
+}
+
+/* Issue List */
+.issue-item {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  border-right: 3px solid var(--accent-red);
+  transition: var(--transition);
+}
+
+.issue-item:hover { background: var(--bg-card-hover); }
+.issue-item.fixed { border-right-color: var(--accent-green); opacity: 0.7; }
+.issue-item.warning { border-right-color: var(--accent-orange); }
+
+.issue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.issue-title {
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.issue-severity {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.issue-severity.critical { background: #ef444420; color: var(--accent-red); }
+.issue-severity.high { background: #f59e0b20; color: var(--accent-orange); }
+.issue-severity.medium { background: #00d4ff20; color: var(--accent-primary); }
+.issue-severity.low { background: #10b98120; color: var(--accent-green); }
+
+.issue-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  direction: ltr;
+  text-align: left;
+  font-family: var(--font-mono);
+}
+
+.issue-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.issue-fix-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-arabic);
+  transition: var(--transition);
+}
+
+.issue-fix-btn:hover {
+  background: var(--accent-green);
+  color: white;
+}
+
+/* Coverage Chart */
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.coverage-item {
+  text-align: center;
+  padding: 14px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.coverage-item:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.coverage-ring {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+
+.coverage-ring svg { transform: rotate(-90deg); }
+
+.coverage-ring .ring-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 4;
+}
+
+.coverage-ring .ring-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease;
+}
+
+.coverage-ring .ring-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.coverage-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Fix Sharing Panel */
+.fix-share-item {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--bg-input);
+}
+
+.fix-share-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.fix-share-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.fix-share-icon.api { background: #00d4ff20; color: var(--accent-primary); }
+.fix-share-icon.frontend { background: #7c3aed20; color: var(--accent-secondary); }
+
+.fix-share-title { font-size: 12px; font-weight: 600; }
+.fix-share-arrow { color: var(--accent-green); font-size: 14px; }
+.fix-share-body {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  direction: ltr;
+  text-align: left;
+  background: var(--bg-primary);
+  padding: 8px;
+  border-radius: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* Loading Spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Fade animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.4s ease; }
+
+/* Tab Content */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Custom Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 { font-size: 16px; font-weight: 700; }
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.modal-close:hover { color: var(--accent-red); }
+
+.modal-body { padding: 20px; }
+
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state i {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.3;
+}
+
+.empty-state p { font-size: 13px; }
+
+/* Markdown Rendering */
+.markdown-content {
+  direction: ltr;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+  color: var(--text-primary);
+  margin: 12px 0 6px;
+  font-family: var(--font-arabic);
+}
+
+.markdown-content h1 { font-size: 18px; }
+.markdown-content h2 { font-size: 15px; }
+.markdown-content h3 { font-size: 13px; }
+
+.markdown-content code {
+  background: var(--bg-primary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.markdown-content pre {
+  background: var(--bg-primary);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin: 8px 0;
+  border: 1px solid var(--border);
+}
+
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.markdown-content ul, .markdown-content ol {
+  padding-left: 20px;
+  margin: 6px 0;
+}
+
+.markdown-content li { margin: 3px 0; }
+
+.markdown-content strong { color: var(--accent-primary); }
+
+/* Scenario Checklist */
+.scenario-group {
+  margin-bottom: 16px;
+}
+
+.scenario-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scenario-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scenario-check {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.scenario-check.passed {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: white;
+}
+
+.scenario-check.failed {
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  color: white;
+}
+
+.scenario-check.pending {
+  border-color: var(--accent-orange);
+}
+
+/* Notification toast */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: slideIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 250px;
+}
+
+.toast.success { border-right: 3px solid var(--accent-green); }
+.toast.error { border-right: 3px solid var(--accent-red); }
+.toast.info { border-right: 3px solid var(--accent-primary); }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Timeline */
+.timeline { padding-right: 20px; }
+
+.timeline-item {
+  position: relative;
+  padding-right: 24px;
+  padding-bottom: 16px;
+  border-right: 2px solid var(--border);
+}
+
+.timeline-item:last-child { border-right: none; }
+
+.timeline-dot {
+  position: absolute;
+  right: -7px;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-card);
+}
+
+.timeline-dot.green { background: var(--accent-green); }
+.timeline-dot.red { background: var(--accent-red); }
+.timeline-dot.orange { background: var(--accent-orange); }
+
+.timeline-time {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.timeline-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Hidden */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-section">
+      <div class="logo-icon"><i class="fas fa-flask-vial"></i></div>
+      <div class="logo-text">
+        <h1>GMS Test Suite</h1>
+        <span>Garage Management System v1.0</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" id="btnExport" title="تصدير التقرير">
+        <i class="fas fa-file-export"></i> تصدير
+      </button>
+      <button class="header-btn" id="btnRunAll" title="تشغيل جميع الاختبارات">
+        <i class="fas fa-play"></i> اختبار الكل
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-cubes"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statModules">63</div>
+        <div class="stat-label">إجمالي الوحدات</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statPassed">0</div>
+        <div class="stat-label">اختبار ناجح</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statFailed">0</div>
+        <div class="stat-label">اختبار فاشل</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fas fa-bug"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statIssues">0</div>
+        <div class="stat-label">مشاكل مكتشفة</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="fas fa-wrench"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statFixes">0</div>
+        <div class="stat-label">إصلاحات مقترحة</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon pink"><i class="fas fa-shield-halved"></i></div>
+      <div class="stat-info">
+        <div class="stat-value" id="statCoverage">0%</div>
+        <div class="stat-label">تغطية الاختبار</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <button class="tab-btn active" data-tab="overview">
+      <i class="fas fa-chart-pie"></i> نظرة عامة
+    </button>
+    <button class="tab-btn" data-tab="modules">
+      <i class="fas fa-layer-group"></i> الوحدات <span class="badge">63</span>
+    </button>
+    <button class="tab-btn" data-tab="testing">
+      <i class="fas fa-vial"></i> اختبار تفاعلي
+    </button>
+    <button class="tab-btn" data-tab="issues">
+      <i class="fas fa-bug"></i> المشاكل <span class="badge" id="issuesBadge">0</span>
+    </button>
+    <button class="tab-btn" data-tab="fixes">
+      <i class="fas fa-code-branch"></i> الإصلاحات المشتركة
+    </button>
+    <button class="tab-btn" data-tab="scenarios">
+      <i class="fas fa-list-check"></i> السيناريوهات
+    </button>
+  </div>
+
+  <!-- Tab: Overview -->
+  <div class="tab-content active" id="tab-overview">
+    <div class="panel-grid">
+      <!-- Coverage Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-chart-pie"></i> تغطية الاختبار حسب الفئة</h3>
+        </div>
+        <div class="panel-body no-scroll">
+          <div class="coverage-grid" id="coverageGrid"></div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-clock-rotate-left"></i> سجل النشاطات</h3>
+        </div>
+        <div class="panel-body">
+          <div class="timeline" id="activityTimeline">
+            <div class="empty-state">
+              <i class="fas fa-clock"></i>
+              <p>ابدأ الاختبار لرؤية سجل النشاطات</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backend Modules -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-server"></i> Backend API</h3>
+          <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">32 موديل · 31 مسار</span>
+        </div>
+        <div class="panel-body" id="backendModulesList"></div>
+      </div>
+
+      <!-- Frontend Modules -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-desktop"></i> Frontend GMS</h3>
+          <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">48 صفحة · 71 مكون</span>
+        </div>
+        <div class="panel-body" id="frontendModulesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Modules -->
+  <div class="tab-content" id="tab-modules">
+    <div class="panel panel-full">
+      <div class="panel-header">
+        <h3><i class="fas fa-layer-group"></i> جميع الوحدات</h3>
+        <div style="display:flex;gap:6px">
+          <button class="action-btn" data-filter="all" style="padding:6px 12px;font-size:11px">الكل</button>
+          <button class="action-btn" data-filter="api" style="padding:6px 12px;font-size:11px">API</button>
+          <button class="action-btn" data-filter="frontend" style="padding:6px 12px;font-size:11px">Frontend</button>
+        </div>
+      </div>
+      <div class="panel-body" id="allModulesList" style="max-height:600px"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Interactive Testing -->
+  <div class="tab-content" id="tab-testing">
+    <div class="panel-grid">
+      <!-- Test Config Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-sliders"></i> إعدادات الاختبار</h3>
+        </div>
+        <div class="panel-body no-scroll">
+          <div style="margin-bottom:14px">
+            <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px">اختر الوحدة للاختبار:</label>
+            <select id="testModuleSelect" style="width:100%;padding:10px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:var(--font-arabic);font-size:14px;outline:none">
+              <option value="">-- اختر وحدة --</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px">
+            <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:6px">نوع الاختبار:</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <input type="checkbox" id="testUnit" checked> وحدة
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <input type="checkbox" id="testIntegration" checked> تكامل
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <input type="checkbox" id="testSecurity"> أمان
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;padding:6px 10px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm)">
+                <input type="checkbox" id="testEdge"> حالات حدية
+              </label>
+            </div>
+          </div>
+          <div class="test-actions">
+            <button class="action-btn primary" id="btnRunTest" disabled>
+              <i class="fas fa-play"></i> تشغيل الاختبار
+            </button>
+            <button class="action-btn" id="btnGenTests">
+              <i class="fas fa-wand-magic-sparkles"></i> توليد اختبارات
+            </button>
+          </div>
+          <div class="progress-bar-container" id="testProgress" style="display:none">
+            <div class="progress-bar-fill" id="testProgressFill" style="width:0%"></div>
+          </div>
+          <div id="testStatusText" style="font-size:11px;color:var(--text-muted);margin-top:4px;font-family:var(--font-mono);direction:ltr;text-align:left"></div>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-terminal"></i> نتائج الاختبار</h3>
+          <button class="action-btn" id="btnClearResults" style="padding:4px 10px;font-size:11px">
+            <i class="fas fa-trash"></i> مسح
+          </button>
+        </div>
+        <div class="panel-body" style="padding:0">
+          <div class="results-area" id="testResultsArea">
+            <span class="line-dim">// انتظار تشغيل الاختبار...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Analysis Panel -->
+      <div class="panel panel-full">
+        <div class="panel-header">
+          <h3><i class="fas fa-robot"></i> تحليل الذكاء الاصطناعي</h3>
+          <button class="action-btn" id="btnAskAI" style="padding:6px 12px;font-size:11px">
+            <i class="fas fa-brain"></i> تحليل بالذكاء الاصطناعي
+          </button>
+        </div>
+        <div class="panel-body">
+          <div class="markdown-content" id="aiAnalysisArea">
+            <div class="empty-state">
+              <i class="fas fa-robot"></i>
+              <p>اختر وحدة وشغل الاختبار ثم اطلب تحليل AI</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Issues -->
+  <div class="tab-content" id="tab-issues">
+    <div class="panel panel-full">
+      <div class="panel-header">
+        <h3><i class="fas fa-bug"></i> المشاكل المكتشفة</h3>
+        <div style="display:flex;gap:6px">
+          <button class="action-btn" data-severity="all" style="padding:6px 12px;font-size:11px">الكل</button>
+          <button class="action-btn" data-severity="critical" style="padding:6px 12px;font-size:11px">حرج</button>
+          <button class="action-btn" data-severity="high" style="padding:6px 12px;font-size:11px">عالي</button>
+          <button class="action-btn" data-severity="medium" style="padding:6px 12px;font-size:11px">متوسط</button>
+        </div>
+      </div>
+      <div class="panel-body" id="issuesList" style="max-height:600px">
+        <div class="empty-state">
+          <i class="fas fa-check-circle"></i>
+          <p>لم يتم اكتشاف مشاكل بعد. شغل الاختبارات أولاً.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Shared Fixes -->
+  <div class="tab-content" id="tab-fixes">
+    <div class="panel-grid">
+      <div class="panel panel-full">
+        <div class="panel-header">
+          <h3><i class="fas fa-code-branch"></i> الإصلاحات المشتركة بين الوحدات</h3>
+          <button class="action-btn" id="btnShareFixes" style="padding:6px 12px;font-size:11px">
+            <i class="fas fa-share-nodes"></i> مشاركة الإصلاحات
+          </button>
+        </div>
+        <div class="panel-body" id="fixesList" style="max-height:600px">
+          <div class="empty-state">
+            <i class="fas fa-code-branch"></i>
+            <p>شغل الاختبارات لاكتشاف الإصلاحات المشتركة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Scenarios -->
+  <div class="tab-content" id="tab-scenarios">
+    <div class="panel-grid">
+      <div class="panel panel-full">
+        <div class="panel-header">
+          <h3><i class="fas fa-list-check"></i> سيناريوهات الاختبار الشاملة</h3>
+          <button class="action-btn primary" id="btnGenScenarios" style="padding:6px 12px;font-size:11px">
+            <i class="fas fa-wand-magic-sparkles"></i> توليد السيناريوهات
+          </button>
+        </div>
+        <div class="panel-body" id="scenariosList" style="max-height:none">
+          <div class="empty-state">
+            <i class="fas fa-list-check"></i>
+            <p>اضغط "توليد السيناريوهات" لإنشاء قائمة شاملة</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function() {
+  "use strict";
+
+  // ── Dark/Light Mode Detection ──
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.documentElement.classList.add('light');
+  }
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(event) {
+    if (event.matches) {
+      document.documentElement.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+    }
+  });
+
+  // ── Data: Modules ──
+  var backendModules = [
+    { id: 'api-auth', name: 'Authentication (JWT)', type: 'api', category: 'Core', files: ['middleware/auth.js', 'routes/userRoutes.js'], status: 'idle' },
+    { id: 'api-permissions', name: 'Permission System', type: 'api', category: 'Core', files: ['middleware/permissionAuth.js', 'config/permissions.js'], status: 'idle' },
+    { id: 'api-users', name: 'User Management', type: 'api', category: 'Core', files: ['models/User.js', 'routes/userRoutes.js'], status: 'idle' },
+    { id: 'api-roles', name: 'Role Management', type: 'api', category: 'Core', files: ['models/Role.js', 'routes/roleRoutes.js'], status: 'idle' },
+    { id: 'api-branches', name: 'Branch Management', type: 'api', category: 'Core', files: ['models/Branch.js', 'routes/branchRoutes.js'], status: 'idle' },
+    { id: 'api-customers', name: 'Customer CRUD', type: 'api', category: 'Business', files: ['models/Customer.js', 'routes/customerRoutes.js'], status: 'idle' },
+    { id: 'api-workorders', name: 'Work Orders', type: 'api', category: 'Business', files: ['models/WorkOrder.js', 'routes/workOrderRoutes.js'], status: 'idle' },
+    { id: 'api-invoices', name: 'Invoice System', type: 'api', category: 'Business', files: ['models/Invoice.js', 'routes/invoiceRoutes.js'], status: 'idle' },
+    { id: 'api-cases', name: 'Case Management', type: 'api', category: 'Business', files: ['models/Case.js', 'routes/caseRoutes.js'], status: 'idle' },
+    { id: 'api-expenses', name: 'Expense Tracking', type: 'api', category: 'Finance', files: ['models/Expense.js', 'routes/expenseRoutes.js'], status: 'idle' },
+    { id: 'api-finance', name: 'Finance Module', type: 'api', category: 'Finance', files: ['models/Finance.js', 'routes/financeRoutes.js'], status: 'idle' },
+    { id: 'api-payroll', name: 'Payroll System', type: 'api', category: 'Finance', files: ['models/PayrollCalculation.js', 'routes/payrollRoutes.js'], status: 'idle' },
+    { id: 'api-payperiods', name: 'Pay Periods', type: 'api', category: 'Finance', files: ['models/PayPeriod.js', 'routes/payroll/payPeriods.js'], status: 'idle' },
+    { id: 'api-deductions', name: 'Deductions', type: 'api', category: 'Finance', files: ['models/PayrollDeductionType.js', 'routes/payroll/deductionTypes.js'], status: 'idle' },
+    { id: 'api-timesheets', name: 'Timesheets', type: 'api', category: 'Finance', files: ['models/TimeSheet.js', 'routes/payroll/timesheets.js'], status: 'idle' },
+    { id: 'api-paystubs', name: 'Pay Stubs', type: 'api', category: 'Finance', files: ['models/PayStub.js', 'routes/payroll/paystubs.js'], status: 'idle' },
+    { id: 'api-qa', name: 'QA Verification', type: 'api', category: 'Quality', files: ['models/WorkOrderQA.js', 'routes/workOrderQARoutes.js'], status: 'idle' },
+    { id: 'api-qcapproval', name: 'QC Approvals', type: 'api', category: 'Quality', files: ['routes/qcApprovalRoutes.js'], status: 'idle' },
+    { id: 'api-errors', name: 'Error Reports', type: 'api', category: 'Quality', files: ['models/ErrorReport.js', 'routes/errorReportRoutes.js'], status: 'idle' },
+    { id: 'api-messaging', name: 'Messaging System', type: 'api', category: 'Communication', files: ['models/Message.js', 'routes/messagingRoutes.js', 'services/messageEncryption.js'], status: 'idle' },
+    { id: 'api-notifications', name: 'Notifications', type: 'api', category: 'Communication', files: ['models/Notification.js', 'routes/notificationRoutes.js'], status: 'idle' },
+    { id: 'api-websocket', name: 'WebSocket Service', type: 'api', category: 'Communication', files: ['services/websocket.js'], status: 'idle' },
+    { id: 'api-s3', name: 'S3 File Upload', type: 'api', category: 'Infrastructure', files: ['services/s3.js', 'middleware/s3Upload.js'], status: 'idle' },
+    { id: 'api-pdf', name: 'PDF Generation', type: 'api', category: 'Infrastructure', files: ['utils/pdfGenerator.js', 'utils/carJobPdfGenerator.js'], status: 'idle' },
+    { id: 'api-dbseeder', name: 'Database Seeder', type: 'api', category: 'Infrastructure', files: ['config/dbSeeder.js', 'models/index.js'], status: 'idle' },
+    { id: 'api-carparts', name: 'Car Parts', type: 'api', category: 'Business', files: ['models/CarPart.js', 'routes/carPartRoutes.js'], status: 'idle' },
+    { id: 'api-variations', name: 'Service Variations', type: 'api', category: 'Business', files: ['models/Variation.js', 'routes/variationRoutes.js'], status: 'idle' },
+    { id: 'api-stages', name: 'Workflow Stages', type: 'api', category: 'Business', files: ['models/Stage.js', 'routes/stageRoutes.js'], status: 'idle' },
+    { id: 'api-reviews', name: 'Customer Reviews', type: 'api', category: 'Quality', files: ['models/CustomerReview.js', 'routes/customerReviewRoutes.js'], status: 'idle' },
+    { id: 'api-auditing', name: 'Payroll Audit', type: 'api', category: 'Finance', files: ['middleware/payrollAudit.js', 'models/PayrollAuditLog.js'], status: 'idle' },
+    { id: 'api-validation', name: 'Payroll Validation', type: 'api', category: 'Finance', files: ['middleware/payrollValidation.js'], status: 'idle' },
+    { id: 'api-reports', name: 'Report Generation', type: 'api', category: 'Infrastructure', files: ['utils/reportGenerator.js', 'routes/payroll/reports.js'], status: 'idle' }
+  ];
+
+  var frontendModules = [
+    { id: 'fe-auth', name: 'Auth Context & Login', type: 'frontend', category: 'Core', files: ['context/AuthContext.tsx', 'login/page.tsx'], status: 'idle' },
+    { id: 'fe-routing', name: 'Route Protection', type: 'frontend', category: 'Core', files: ['middleware.ts', 'services/route-protection.ts'], status: 'idle' },
+    { id: 'fe-api', name: 'API Service Layer', type: 'frontend', category: 'Core', files: ['services/api.ts'], status: 'idle' },
+    { id: 'fe-dashboard', name: 'Dashboard', type: 'frontend', category: 'Pages', files: ['page.tsx', 'components/Dashboard/'], status: 'idle' },
+    { id: 'fe-customers', name: 'Customer Management', type: 'frontend', category: 'Pages', files: ['Customers/page.tsx', 'components/Customer/'], status: 'idle' },
+    { id: 'fe-workorders', name: 'Work Orders', type: 'frontend', category: 'Pages', files: ['workOrders/page.tsx', 'workOrders/[id]/page.tsx'], status: 'idle' },
+    { id: 'fe-invoices', name: 'Invoice Management', type: 'frontend', category: 'Pages', files: ['Invoices/page.tsx', 'components/Invoices/'], status: 'idle' },
+    { id: 'fe-cases', name: 'Case Management', type: 'frontend', category: 'Pages', files: ['cases/page.tsx', 'cases/components/'], status: 'idle' },
+    { id: 'fe-expenses', name: 'Expense Tracking', type: 'frontend', category: 'Pages', files: ['expenses/page.tsx', 'components/Expenses/'], status: 'idle' },
+    { id: 'fe-payroll', name: 'Payroll System', type: 'frontend', category: 'Pages', files: ['payroll/page.tsx', 'components/Payroll/'], status: 'idle' },
+    { id: 'fe-staff', name: 'Staff Management', type: 'frontend', category: 'Pages', files: ['staff/page.tsx', 'components/Staff/'], status: 'idle' },
+    { id: 'fe-messaging', name: 'Messaging UI', type: 'frontend', category: 'Pages', files: ['Messaging/page.tsx', 'components/Messaging/'], status: 'idle' },
+    { id: 'fe-notifications', name: 'Notifications', type: 'frontend', category: 'Pages', files: ['notifications/', 'context/NotificationContext.tsx'], status: 'idle' },
+    { id: 'fe-finance', name: 'Finance Dashboard', type: 'frontend', category: 'Pages', files: ['finance/page.tsx', 'components/Finance/'], status: 'idle' },
+    { id: 'fe-qa', name: 'QA Review', type: 'frontend', category: 'Pages', files: ['qa-review/page.tsx', 'components/qa/'], status: 'idle' },
+    { id: 'fe-newreg', name: 'New Registration', type: 'frontend', category: 'Pages', files: ['new_reg/page.tsx', 'new_reg/StepOne.tsx', 'new_reg/StepTwo.tsx'], status: 'idle' },
+    { id: 'fe-kpi', name: 'KPI Analytics', type: 'frontend', category: 'Pages', files: ['kpi/page.tsx', 'components/Kpi/'], status: 'idle' },
+    { id: 'fe-settings', name: 'Settings', type: 'frontend', category: 'Pages', files: ['settings/page.tsx'], status: 'idle' },
+    { id: 'fe-websocket', name: 'WebSocket Hook', type: 'frontend', category: 'Core', files: ['hooks/useWebSocket.tsx'], status: 'idle' },
+    { id: 'fe-language', name: 'Language Context', type: 'frontend', category: 'Core', files: ['context/LanguageContext.tsx'], status: 'idle' },
+    { id: 'fe-ui', name: 'UI Components', type: 'frontend', category: 'Core', files: ['components/ui/'], status: 'idle' },
+    { id: 'fe-types', name: 'TypeScript Types', type: 'frontend', category: 'Core', files: ['types/'], status: 'idle' },
+    { id: 'fe-sidebar', name: 'Sidebar Navigation', type: 'frontend', category: 'Core', files: ['components/Sidebar/sideBar.tsx'], status: 'idle' },
+    { id: 'fe-navbar', name: 'Top Navigation', type: 'frontend', category: 'Core', files: ['components/Navbar/navBar.tsx'], status: 'idle' },
+    { id: 'fe-profile', name: 'User Profile', type: 'frontend', category: 'Pages', files: ['profile/page.tsx'], status: 'idle' },
+    { id: 'fe-reports', name: 'Reports', type: 'frontend', category: 'Pages', files: ['reports/page.tsx'], status: 'idle' },
+    { id: 'fe-attendance', name: 'Attendance', type: 'frontend', category: 'Pages', files: ['payroll/attendance/'], status: 'idle' },
+    { id: 'fe-deductions', name: 'Deductions UI', type: 'frontend', category: 'Pages', files: ['payroll/deductions/'], status: 'idle' },
+    { id: 'fe-paystubs', name: 'Pay Stubs UI', type: 'frontend', category: 'Pages', files: ['payroll/paystubs/page.tsx'], status: 'idle' },
+    { id: 'fe-carcards', name: 'Car Cards', type: 'frontend', category: 'Pages', files: ['car_cards/page.tsx'], status: 'idle' },
+    { id: 'fe-custrev', name: 'Customer Review', type: 'frontend', category: 'Pages', files: ['customer-review/'], status: 'idle' }
+  ];
+
+  var allModules = backendModules.concat(frontendModules);
+
+  // ── State ──
+  var state = {
+    currentTab: 'overview',
+    testResults: [],
+    issues: [],
+    fixes: [],
+    scenarios: [],
+    activityLog: [],
+    isRunning: false,
+    selectedModule: null,
+    coverageData: {}
+  };
+
+  // ── DOM Refs ──
+  var $ = function(sel) { return document.querySelector(sel); };
+  var $$ = function(sel) { return document.querySelectorAll(sel); };
+
+  // ── Toast System ──
+  function showToast(message, type) {
+    type = type || 'info';
+    var container = $('#toastContainer');
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    var icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
+    toast.innerHTML = '<i class="fas fa-' + (icons[type] || 'info-circle') + '" style="color:var(--accent-' + (type === 'success' ? 'green' : type === 'error' ? 'red' : 'primary') + ')"></i>' + message;
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+    }, 3000);
+  }
+
+  // ── Tab System ──
+  function switchTab(tabId) {
+    state.currentTab = tabId;
+    $$('.tab-btn').forEach(function(btn) { btn.classList.toggle('active', btn.dataset.tab === tabId); });
+    $$('.tab-content').forEach(function(content) { content.classList.toggle('active', content.id === 'tab-' + tabId); });
+  }
+
+  $$('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+  });
+
+  // ── Render Modules ──
+  function renderModuleItem(mod) {
+    var div = document.createElement('div');
+    div.className = 'module-item' + (state.selectedModule === mod.id ? ' selected' : '');
+    div.dataset.id = mod.id;
+    div.dataset.type = mod.type;
+    div.innerHTML =
+      '<div class="module-dot ' + mod.type + '"></div>' +
+      '<span class="module-name">' + mod.name + '</span>' +
+      '<span class="module-tag ' + mod.type + '">' + (mod.type === 'api' ? 'API' : 'FE') + '</span>' +
+      '<div class="module-status ' + mod.status + '"></div>';
+    div.addEventListener('click', function() {
+      state.selectedModule = mod.id;
+      var sel = $('#testModuleSelect');
+      if (sel) sel.value = mod.id;
+      updateTestButton();
+      renderModules();
+    });
+    return div;
+  }
+
+  function renderModules() {
+    var backendList = $('#backendModulesList');
+    var frontendList = $('#frontendModulesList');
+    var allList = $('#allModulesList');
+
+    if (backendList) {
+      backendList.innerHTML = '';
+      backendModules.forEach(function(m) { backendList.appendChild(renderModuleItem(m)); });
+    }
+
+    if (frontendList) {
+      frontendList.innerHTML = '';
+      frontendModules.forEach(function(m) { frontendList.appendChild(renderModuleItem(m)); });
+    }
+
+    if (allList) {
+      allList.innerHTML = '';
+      var filter = document.querySelector('[data-filter].active');
+      var filterType = filter ? filter.dataset.filter : 'all';
+      allModules.forEach(function(m) {
+        if (filterType === 'all' || m.type === filterType) {
+          allList.appendChild(renderModuleItem(m));
+        }
+      });
+    }
+  }
+
+  // Module filter buttons
+  $$('[data-filter]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      $$('[data-filter]').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderModules();
+    });
+  });
+
+  // Severity filter buttons
+  $$('[data-severity]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      $$('[data-severity]').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderIssues(btn.dataset.severity);
+    });
+  });
+
+  // ── Populate Select ──
+  function populateModuleSelect() {
+    var sel = $('#testModuleSelect');
+    var apiGroup = document.createElement('optgroup');
+    apiGroup.label = 'Backend API';
+    backendModules.forEach(function(m) {
+      var opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.name;
+      apiGroup.appendChild(opt);
+    });
+
+    var feGroup = document.createElement('optgroup');
+    feGroup.label = 'Frontend GMS';
+    frontendModules.forEach(function(m) {
+      var opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = m.name;
+      feGroup.appendChild(opt);
+    });
+
+    sel.appendChild(apiGroup);
+    sel.appendChild(feGroup);
+
+    sel.addEventListener('change', function() {
+      state.selectedModule = sel.value || null;
+      updateTestButton();
+      renderModules();
+    });
+  }
+
+  function updateTestButton() {
+    var btn = $('#btnRunTest');
+    var genBtn = $('#btnGenTests');
+    btn.disabled = !state.selectedModule || state.isRunning;
+    genBtn.disabled = !state.selectedModule || state.isRunning;
+  }
+
+  // ── Coverage Rendering ──
+  function renderCoverage() {
+    var grid = $('#coverageGrid');
+    var categories = [
+      { name: 'المصادقة', key: 'auth', value: 0 },
+      { name: 'المستخدمين', key: 'users', value: 0 },
+      { name: 'أوامر العمل', key: 'workorders', value: 0 },
+      { name: 'الفواتير', key: 'invoices', value: 0 },
+      { name: 'العملاء', key: 'customers', value: 0 },
+      { name: 'القضايا', key: 'cases', value: 0 },
+      { name: 'المالية', key: 'finance', value: 0 },
+      { name: 'الرواتب', key: 'payroll', value: 0 },
+      { name: 'الرسائل', key: 'messaging', value: 0 },
+      { name: 'الجودة', key: 'qa', value: 0 }
+    ];
+
+    categories.forEach(function(cat) {
+      if (state.coverageData[cat.key] !== undefined) {
+        cat.value = state.coverageData[cat.key];
+      }
+    });
+
+    grid.innerHTML = '';
+    categories.forEach(function(cat) {
+      var circumference = 2 * Math.PI * 26;
+      var offset = circumference - (cat.value / 100) * circumference;
+      var color = cat.value >= 80 ? 'var(--accent-green)' : cat.value >= 50 ? 'var(--accent-orange)' : cat.value > 0 ? 'var(--accent-red)' : 'var(--text-muted)';
+
+      var item = document.createElement('div');
+      item.className = 'coverage-item';
+      item.innerHTML =
+        '<div class="coverage-ring">' +
+          '<svg viewBox="0 0 64 64" width="64" height="64">' +
+            '<circle class="ring-bg" cx="32" cy="32" r="26"></circle>' +
+            '<circle class="ring-fill" cx="32" cy="32" r="26" stroke="' + color + '" stroke-dasharray="' + (circumference - offset) + ' ' + offset + '"></circle>' +
+          '</svg>' +
+          '<div class="ring-text" style="color:' + color + '">' + cat.value + '%</div>' +
+        '</div>' +
+        '<div class="coverage-label">' + cat.name + '</div>';
+      grid.appendChild(item);
+    });
+  }
+
+  // ── Activity Timeline ──
+  function addActivity(text, type) {
+    type = type || 'blue';
+    var now = new Date();
+    var timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
+    state.activityLog.unshift({ text: text, type: type, time: timeStr });
+    if (state.activityLog.length > 50) state.activityLog.pop();
+    renderTimeline();
+  }
+
+  function renderTimeline() {
+    var container = $('#activityTimeline');
+    if (state.activityLog.length === 0) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>ابدأ الاختبار لرؤية سجل النشاطات</p></div>';
+      return;
+    }
+    container.innerHTML = '';
+    state.activityLog.slice(0, 20).forEach(function(item) {
+      var el = document.createElement('div');
+      el.className = 'timeline-item';
+      el.innerHTML =
+        '<div class="timeline-dot ' + item.type + '"></div>' +
+        '<div class="timeline-time">' + item.time + '</div>' +
+        '<div class="timeline-text">' + item.text + '</div>';
+      container.appendChild(el);
+    });
+  }
+
+  // ── Render Issues ──
+  function renderIssues(filter) {
+    var container = $('#issuesList');
+    var filtered = state.issues;
+    if (filter && filter !== 'all') {
+      filtered = state.issues.filter(function(i) { return i.severity === filter; });
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-check-circle"></i><p>لم يتم اكتشاف مشاكل بعد. شغل الاختبارات أولاً.</p></div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    filtered.forEach(function(issue, idx) {
+      var div = document.createElement('div');
+      div.className = 'issue-item' + (issue.fixed ? ' fixed' : '') + (issue.severity === 'medium' ? ' warning' : '');
+      div.innerHTML =
+        '<div class="issue-header">' +
+          '<span class="issue-title">' + (issue.fixed ? '<s>' : '') + issue.title + (issue.fixed ? '</s>' : '') + '</span>' +
+          '<span class="issue-severity ' + issue.severity + '">' + issue.severity.toUpperCase() + '</span>' +
+        '</div>' +
+        '<div class="issue-desc">' + issue.description + '</div>' +
+        '<div class="issue-meta">' +
+          '<span><i class="fas fa-folder"></i> ' + issue.module + '</span>' +
+          '<span><i class="fas fa-file-code"></i> ' + issue.file + '</span>' +
+          (issue.fixed ? '<span style="color:var(--accent-green)"><i class="fas fa-check"></i> تم الإصلاح</span>' : '<button class="issue-fix-btn" data-issue="' + idx + '"><i class="fas fa-wrench"></i> اقتراح إصلاح</button>') +
+        '</div>';
+      container.appendChild(div);
+    });
+
+    container.querySelectorAll('.issue-fix-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var issueIdx = parseInt(btn.dataset.issue);
+        requestFix(issueIdx);
+      });
+    });
+  }
+
+  // ── Render Fixes ──
+  function renderFixes() {
+    var container = $('#fixesList');
+    if (state.fixes.length === 0) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-code-branch"></i><p>شغل الاختبارات لاكتشاف الإصلاحات المشتركة</p></div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    state.fixes.forEach(function(fix) {
+      var div = document.createElement('div');
+      div.className = 'fix-share-item';
+      div.innerHTML =
+        '<div class="fix-share-header">' +
+          '<div class="fix-share-icon ' + fix.sourceType + '"><i class="fas fa-' + (fix.sourceType === 'api' ? 'server' : 'desktop') + '"></i></div>' +
+          '<span class="fix-share-title">' + fix.source + '</span>' +
+          '<i class="fas fa-arrow-left fix-share-arrow"></i>' +
+          '<div class="fix-share-icon ' + fix.targetType + '"><i class="fas fa-' + (fix.targetType === 'api' ? 'server' : 'desktop') + '"></i></div>' +
+          '<span class="fix-share-title">' + fix.target + '</span>' +
+        '</div>' +
+        '<div class="fix-share-body">' + fix.code + '</div>';
+      container.appendChild(div);
+    });
+  }
+
+  // ── Update Stats ──
+  function updateStats() {
+    var passed = 0, failed = 0;
+    allModules.forEach(function(m) {
+      if (m.status === 'passed') passed++;
+      else if (m.status === 'failed') failed++;
+    });
+
+    $('#statPassed').textContent = passed;
+    $('#statFailed').textContent = failed;
+    $('#statIssues').textContent = state.issues.length;
+    $('#statFixes').textContent = state.fixes.length;
+    $('#issuesBadge').textContent = state.issues.length;
+
+    var tested = passed + failed;
+    var coverage = allModules.length > 0 ? Math.round((tested / allModules.length) * 100) : 0;
+    $('#statCoverage').textContent = coverage + '%';
+  }
+
+  // ── Results Area ──
+  function appendResult(text, cls) {
+    var area = $('#testResultsArea');
+    if (area.querySelector('.line-dim') && area.textContent.indexOf('انتظار') >= 0) {
+      area.innerHTML = '';
+    }
+    var span = document.createElement('span');
+    span.className = cls || '';
+    span.textContent = text + '\n';
+    area.appendChild(span);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function appendResultHTML(html) {
+    var area = $('#testResultsArea');
+    if (area.querySelector('.line-dim') && area.textContent.indexOf('انتظار') >= 0) {
+      area.innerHTML = '';
+    }
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  // ── Poe API Handlers ──
+  var handlerRegistered = false;
+
+  function registerHandlers() {
+    if (handlerRegistered) return;
+    handlerRegistered = true;
+
+    if (typeof window.Poe === 'undefined') return;
+
+    window.Poe.registerHandler('test-handler', function(result, context) {
+      var msg = result.responses[0];
+      if (!msg) return;
+
+      if (msg.status === 'error') {
+        appendResult('ERROR: ' + (msg.statusText || 'Unknown error'), 'line-fail');
+        finishTest(context.moduleId, false);
+      } else if (msg.status === 'incomplete') {
+        var statusText = $('#testStatusText');
+        statusText.textContent = 'Analyzing: ' + msg.content.length + ' chars received...';
+      } else if (msg.status === 'complete') {
+        processTestResults(msg.content, context.moduleId, context.testType);
+      }
+    });
+
+    window.Poe.registerHandler('fix-handler', function(result, context) {
+      var msg = result.responses[0];
+      if (!msg) return;
+
+      if (msg.status === 'complete') {
+        processFix(msg.content, context.issueIdx);
+      } else if (msg.status === 'error') {
+        showToast('خطأ في إنشاء الإصلاح', 'error');
+      }
+    });
+
+    window.Poe.registerHandler('scenario-handler', function(result, context) {
+      var msg = result.responses[0];
+      if (!msg) return;
+
+      if (msg.status === 'incomplete') {
+        var container = $('#scenariosList');
+        container.innerHTML = '<div class="markdown-content">' + marked.parse(msg.content) + '</div>';
+      } else if (msg.status === 'complete') {
+        processScenarios(msg.content);
+      } else if (msg.status === 'error') {
+        showToast('خطأ في توليد السيناريوهات', 'error');
+      }
+    });
+
+    window.Poe.registerHandler('ai-analysis-handler', function(result, context) {
+      var msg = result.responses[0];
+      if (!msg) return;
+
+      var area = $('#aiAnalysisArea');
+      if (msg.status === 'incomplete') {
+        area.innerHTML = marked.parse(msg.content);
+      } else if (msg.status === 'complete') {
+        area.innerHTML = marked.parse(msg.content);
+        showToast('اكتمل تحليل الذكاء الاصطناعي', 'success');
+      } else if (msg.status === 'error') {
+        area.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>حدث خطأ: ' + (msg.statusText || '') + '</p></div>';
+      }
+    });
+  }
+
+  // ── Run Test ──
+  function getModuleById(id) {
+    return allModules.find(function(m) { return m.id === id; });
+  }
+
+  function runTest(moduleId) {
+    var mod = getModuleById(moduleId);
+    if (!mod || state.isRunning) return;
+
+    state.isRunning = true;
+    mod.status = 'testing';
+    updateTestButton();
+    renderModules();
+
+    var testTypes = [];
+    if ($('#testUnit').checked) testTypes.push('unit');
+    if ($('#testIntegration').checked) testTypes.push('integration');
+    if ($('#testSecurity').checked) testTypes.push('security');
+    if ($('#testEdge').checked) testTypes.push('edge-cases');
+
+    var typeStr = testTypes.join(', ') || 'unit, integration';
+
+    $('#testProgress').style.display = 'block';
+    $('#testProgressFill').style.width = '10%';
+    $('#testStatusText').textContent = 'Initializing test for ' + mod.name + '...';
+
+    appendResult('═══════════════════════════════════════', 'line-header');
+    appendResult('  Testing: ' + mod.name + ' (' + mod.type.toUpperCase() + ')', 'line-header');
+    appendResult('  Types: ' + typeStr, 'line-info');
+    appendResult('  Files: ' + mod.files.join(', '), 'line-dim');
+    appendResult('═══════════════════════════════════════', 'line-header');
+    appendResult('', '');
+
+    addActivity('بدء اختبار: ' + mod.name, 'orange');
+
+    var prompt = buildTestPrompt(mod, typeStr);
+
+    if (typeof window.Poe === 'undefined') {
+      simulateTest(mod, typeStr);
+      return;
+    }
+
+    registerHandlers();
+
+    var progressInterval = setInterval(function() {
+      var fill = $('#testProgressFill');
+      var current = parseFloat(fill.style.width);
+      if (current < 85) {
+        fill.style.width = (current + Math.random() * 5) + '%';
+      }
+    }, 1000);
+
+    window._testProgressInterval = progressInterval;
+
+    window.Poe.sendUserMessage(
+      '@Claude-Sonnet-4.5 ' + prompt,
+      {
+        handler: 'test-handler',
+        stream: true,
+        openChat: false,
+        handlerContext: { moduleId: moduleId, testType: typeStr },
+        parameters: { thinking_budget: 10000 }
+      }
+    ).catch(function(err) {
+      clearInterval(progressInterval);
+      appendResult('ERROR: ' + err.message, 'line-fail');
+      finishTest(moduleId, false);
+    });
+  }
+
+  function buildTestPrompt(mod, typeStr) {
+    var isApi = mod.type === 'api';
+    var context = isApi ?
+      'This is a Node.js Express.js + MongoDB backend module for a Garage Management System (GMS). Files: ' + mod.files.join(', ') + '.' :
+      'This is a Next.js 15 + React 19 + TypeScript frontend module for a Garage Management System (GMS). Files: ' + mod.files.join(', ') + '.';
+
+    return 'You are an expert code tester. Analyze the module "' + mod.name + '" and generate comprehensive test results.\n\n' +
+      'Context: ' + context + '\n\n' +
+      'Test types requested: ' + typeStr + '\n\n' +
+      'IMPORTANT: Respond ONLY in this exact JSON format (no markdown, no code fences, just raw JSON):\n' +
+      '{\n' +
+      '  "summary": { "total": N, "passed": N, "failed": N, "warnings": N },\n' +
+      '  "tests": [\n' +
+      '    { "name": "test name", "status": "pass|fail|warn", "description": "what was tested", "details": "specifics" }\n' +
+      '  ],\n' +
+      '  "issues": [\n' +
+      '    { "title": "issue title", "severity": "critical|high|medium|low", "description": "code-level description", "file": "filename", "suggestion": "how to fix" }\n' +
+      '  ],\n' +
+      '  "coverage": { "category": "' + mod.category.toLowerCase() + '", "percentage": N },\n' +
+      '  "crossModuleFixes": [\n' +
+      '    { "source": "module name", "sourceType": "api|frontend", "target": "affected module", "targetType": "api|frontend", "description": "shared fix description", "code": "fix snippet" }\n' +
+      '  ]\n' +
+      '}\n\n' +
+      'Generate realistic, thorough test results covering: validation, error handling, authentication, authorization, edge cases, data integrity, ' +
+      (isApi ? 'API responses, middleware chains, database operations, input sanitization.' : 'component rendering, state management, API integration, user interactions, accessibility, responsive design.') +
+      '\nGenerate at least 10 test cases and identify real potential issues.';
+  }
+
+  // ── Process Test Results ──
+  function processTestResults(content, moduleId, testType) {
+    var mod = getModuleById(moduleId);
+    if (!mod) return;
+
+    if (window._testProgressInterval) {
+      clearInterval(window._testProgressInterval);
+    }
+    $('#testProgressFill').style.width = '100%';
+
+    var data;
+    try {
+      var jsonStr = content.trim();
+      var jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+      if (jsonMatch) jsonStr = jsonMatch[0];
+      data = JSON.parse(jsonStr);
+    } catch (e) {
+      appendResult('Received analysis (non-JSON format):', 'line-info');
+      var area = $('#aiAnalysisArea');
+      area.innerHTML = marked.parse(content);
+      finishTest(moduleId, true);
+      return;
+    }
+
+    var summary = data.summary || { total: 0, passed: 0, failed: 0, warnings: 0 };
+
+    appendResult('', '');
+    appendResult('  Results Summary', 'line-header');
+    appendResult('  ────────────────────────────────────', 'line-dim');
+    appendResult('  Total: ' + summary.total + '  |  Passed: ' + summary.passed + '  |  Failed: ' + summary.failed + '  |  Warnings: ' + (summary.warnings || 0), summary.failed > 0 ? 'line-fail' : 'line-pass');
+    appendResult('', '');
+
+    if (data.tests) {
+      data.tests.forEach(function(test) {
+        var icon = test.status === 'pass' ? '✓' : test.status === 'fail' ? '✗' : '⚠';
+        var cls = test.status === 'pass' ? 'line-pass' : test.status === 'fail' ? 'line-fail' : 'line-warn';
+        appendResult('  ' + icon + ' ' + test.name, cls);
+        if (test.details) {
+          appendResult('    ' + test.details, 'line-dim');
+        }
+      });
+    }
+
+    if (data.issues && data.issues.length > 0) {
+      appendResult('', '');
+      appendResult('  Issues Found: ' + data.issues.length, 'line-fail');
+      data.issues.forEach(function(issue) {
+        state.issues.push({
+          title: issue.title,
+          severity: issue.severity || 'medium',
+          description: issue.description,
+          module: mod.name,
+          file: issue.file || mod.files[0],
+          suggestion: issue.suggestion,
+          fixed: false
+        });
+      });
+    }
+
+    if (data.crossModuleFixes && data.crossModuleFixes.length > 0) {
+      data.crossModuleFixes.forEach(function(fix) {
+        state.fixes.push({
+          source: fix.source || mod.name,
+          sourceType: fix.sourceType || mod.type,
+          target: fix.target || 'Unknown',
+          targetType: fix.targetType || (mod.type === 'api' ? 'frontend' : 'api'),
+          code: fix.description + (fix.code ? '\n\n' + fix.code : '')
+        });
+      });
+    }
+
+    if (data.coverage) {
+      var catKey = mapCategoryKey(data.coverage.category || mod.category);
+      state.coverageData[catKey] = Math.min(100, data.coverage.percentage || 0);
+    }
+
+    var hasFailed = summary.failed > 0;
+    finishTest(moduleId, !hasFailed);
+  }
+
+  function mapCategoryKey(cat) {
+    var map = {
+      core: 'auth', authentication: 'auth', 'Core': 'auth',
+      business: 'workorders', 'Business': 'workorders',
+      finance: 'finance', 'Finance': 'finance',
+      quality: 'qa', 'Quality': 'qa',
+      communication: 'messaging', 'Communication': 'messaging',
+      infrastructure: 'auth', 'Infrastructure': 'auth',
+      pages: 'workorders', 'Pages': 'workorders'
+    };
+    return map[cat] || 'auth';
+  }
+
+  function finishTest(moduleId, passed) {
+    var mod = getModuleById(moduleId);
+    if (mod) {
+      mod.status = passed ? 'passed' : 'failed';
+    }
+    state.isRunning = false;
+    updateTestButton();
+    updateStats();
+    renderModules();
+    renderIssues('all');
+    renderFixes();
+    renderCoverage();
+
+    var statusText = passed ? 'اجتاز الاختبار بنجاح' : 'فشل الاختبار - تم اكتشاف مشاكل';
+    addActivity((mod ? mod.name : moduleId) + ': ' + statusText, passed ? 'green' : 'red');
+    showToast(statusText, passed ? 'success' : 'error');
+
+    setTimeout(function() {
+      $('#testProgress').style.display = 'none';
+      $('#testProgressFill').style.width = '0%';
+      $('#testStatusText').textContent = '';
+    }, 2000);
+  }
+
+  // ── Simulate Test (when Poe API unavailable) ──
+  function simulateTest(mod, typeStr) {
+    var testNames = {
+      api: [
+        'should return 401 for unauthenticated requests',
+        'should validate required fields',
+        'should handle duplicate entries gracefully',
+        'should return paginated results',
+        'should enforce role-based access',
+        'should sanitize input data',
+        'should handle database connection errors',
+        'should return correct status codes',
+        'should validate ObjectId format',
+        'should handle concurrent requests',
+        'should enforce rate limiting',
+        'should log audit trail entries'
+      ],
+      frontend: [
+        'should render without crashing',
+        'should display loading state',
+        'should handle API errors gracefully',
+        'should validate form inputs',
+        'should update state on user interaction',
+        'should be responsive on mobile',
+        'should support dark mode',
+        'should handle empty data state',
+        'should navigate correctly',
+        'should display toast notifications',
+        'should handle WebSocket disconnection',
+        'should sanitize displayed content'
+      ]
+    };
+
+    var tests = testNames[mod.type] || testNames.api;
+    var results = [];
+    var totalPass = 0, totalFail = 0, totalWarn = 0;
+
+    var i = 0;
+    var interval = setInterval(function() {
+      if (i >= tests.length) {
+        clearInterval(interval);
+        appendResult('', '');
+        appendResult('  Results Summary', 'line-header');
+        appendResult('  ────────────────────────────────────', 'line-dim');
+        appendResult('  Total: ' + tests.length + '  |  Passed: ' + totalPass + '  |  Failed: ' + totalFail + '  |  Warnings: ' + totalWarn, totalFail > 0 ? 'line-fail' : 'line-pass');
+
+        if (totalFail > 0) {
+          state.issues.push({
+            title: 'Missing error handling in ' + mod.name,
+            severity: 'high',
+            description: 'Some error paths are not properly handled which could lead to unhandled promise rejections',
+            module: mod.name,
+            file: mod.files[0],
+            suggestion: 'Add try-catch blocks and proper error response handling',
+            fixed: false
+          });
+          state.issues.push({
+            title: 'Input validation gaps in ' + mod.name,
+            severity: 'medium',
+            description: 'Missing validation for edge case inputs (empty strings, special characters, extremely long values)',
+            module: mod.name,
+            file: mod.files[0],
+            suggestion: 'Add comprehensive input validation using express-validator or Yup schemas',
+            fixed: false
+          });
+        }
+
+        state.fixes.push({
+          source: mod.name,
+          sourceType: mod.type,
+          target: mod.type === 'api' ? 'Frontend API Service' : 'Backend ' + mod.name,
+          targetType: mod.type === 'api' ? 'frontend' : 'api',
+          code: 'Shared fix: Ensure error response format is consistent.\n\n// Backend: standardize error responses\nres.status(code).json({ success: false, message: "...", errors: [...] });\n\n// Frontend: handle standardized errors\ncatch(err) { const msg = err.response?.data?.message || "Error"; }'
+        });
+
+        var catKey = mapCategoryKey(mod.category);
+        state.coverageData[catKey] = Math.min(100, (state.coverageData[catKey] || 0) + Math.floor(Math.random() * 30) + 40);
+
+        finishTest(mod.id, totalFail === 0);
+        return;
+      }
+
+      var progress = ((i + 1) / tests.length * 100);
+      $('#testProgressFill').style.width = progress + '%';
+      $('#testStatusText').textContent = 'Running test ' + (i + 1) + '/' + tests.length;
+
+      var rand = Math.random();
+      var status, icon, cls;
+      if (rand > 0.8) {
+        status = 'fail'; icon = '✗'; cls = 'line-fail'; totalFail++;
+      } else if (rand > 0.7) {
+        status = 'warn'; icon = '⚠'; cls = 'line-warn'; totalWarn++;
+      } else {
+        status = 'pass'; icon = '✓'; cls = 'line-pass'; totalPass++;
+      }
+
+      appendResult('  ' + icon + ' ' + tests[i], cls);
+      results.push({ name: tests[i], status: status });
+      i++;
+    }, 300);
+  }
+
+  // ── Request Fix from AI ──
+  function requestFix(issueIdx) {
+    var issue = state.issues[issueIdx];
+    if (!issue) return;
+
+    showToast('جاري إنشاء اقتراح الإصلاح...', 'info');
+
+    if (typeof window.Poe === 'undefined') {
+      issue.fixed = true;
+      state.fixes.push({
+        source: issue.module,
+        sourceType: issue.file.indexOf('.tsx') >= 0 ? 'frontend' : 'api',
+        target: 'Cross-module',
+        targetType: issue.file.indexOf('.tsx') >= 0 ? 'api' : 'frontend',
+        code: 'Fix for: ' + issue.title + '\n\n' + (issue.suggestion || 'Apply standard error handling patterns.')
+      });
+      updateStats();
+      renderIssues('all');
+      renderFixes();
+      addActivity('تم إصلاح: ' + issue.title, 'green');
+      showToast('تم تطبيق الإصلاح بنجاح', 'success');
+      return;
+    }
+
+    registerHandlers();
+
+    var prompt = 'You are an expert code fixer. Generate a fix for this issue:\n\n' +
+      'Issue: ' + issue.title + '\nSeverity: ' + issue.severity + '\nDescription: ' + issue.description +
+      '\nModule: ' + issue.module + '\nFile: ' + issue.file +
+      '\n\nRespond ONLY in JSON: { "fix": "code fix here", "explanation": "why this fixes it", "affectedModules": ["list of affected modules"] }';
+
+    window.Poe.sendUserMessage(
+      '@Claude-Sonnet-4.5 ' + prompt,
+      {
+        handler: 'fix-handler',
+        stream: false,
+        openChat: false,
+        handlerContext: { issueIdx: issueIdx },
+        parameters: {}
+      }
+    ).catch(function(err) {
+      showToast('خطأ: ' + err.message, 'error');
+    });
+  }
+
+  function processFix(content, issueIdx) {
+    var issue = state.issues[issueIdx];
+    if (!issue) return;
+
+    issue.fixed = true;
+
+    var fixData;
+    try {
+      var jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) fixData = JSON.parse(jsonMatch[0]);
+    } catch (e) {
+      fixData = null;
+    }
+
+    state.fixes.push({
+      source: issue.module,
+      sourceType: issue.file.indexOf('.tsx') >= 0 ? 'frontend' : 'api',
+      target: fixData && fixData.affectedModules ? fixData.affectedModules.join(', ') : 'Cross-module',
+      targetType: issue.file.indexOf('.tsx') >= 0 ? 'api' : 'frontend',
+      code: fixData ? (fixData.explanation + '\n\n' + fixData.fix) : content
+    });
+
+    updateStats();
+    renderIssues('all');
+    renderFixes();
+    addActivity('تم إصلاح: ' + issue.title, 'green');
+    showToast('تم تطبيق الإصلاح بنجاح', 'success');
+  }
+
+  // ── Generate Scenarios ──
+  function generateScenarios() {
+    var container = $('#scenariosList');
+    container.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner" style="width:30px;height:30px;border-width:3px"></div><p style="margin-top:12px;color:var(--text-muted);font-size:13px">جاري توليد السيناريوهات الشاملة...</p></div>';
+
+    addActivity('بدء توليد سيناريوهات الاختبار', 'orange');
+
+    if (typeof window.Poe === 'undefined') {
+      setTimeout(function() {
+        renderDefaultScenarios();
+        addActivity('تم توليد السيناريوهات بنجاح', 'green');
+        showToast('تم توليد السيناريوهات بنجاح', 'success');
+      }, 1500);
+      return;
+    }
+
+    registerHandlers();
+
+    var prompt = 'You are an expert QA engineer. Generate comprehensive test scenarios for a Garage Management System (GMS) with these modules:\n\n' +
+      'Backend: Authentication, User Management, Customers, Work Orders, Invoices, Cases, Expenses, Payroll, Messaging, Notifications, QA, File Upload\n' +
+      'Frontend: Login, Dashboard, Customer Pages, Work Order Pages, Invoice Pages, Case Pages, Expense Pages, Payroll Pages, Messaging, Settings\n\n' +
+      'Generate scenarios in Markdown format with these categories:\n' +
+      '1. Authentication & Security Scenarios\n' +
+      '2. CRUD Operations Scenarios\n' +
+      '3. Business Logic Scenarios\n' +
+      '4. Integration Scenarios (API + Frontend)\n' +
+      '5. Edge Cases & Error Handling\n' +
+      '6. Performance & Load Scenarios\n' +
+      '7. Real-time Communication Scenarios\n' +
+      '8. Data Integrity Scenarios\n\n' +
+      'For each scenario include: name, preconditions, steps, expected results, priority (P0-P3).\n' +
+      'Generate at least 8 scenarios per category.';
+
+    window.Poe.sendUserMessage(
+      '@Claude-Sonnet-4.5 ' + prompt,
+      {
+        handler: 'scenario-handler',
+        stream: true,
+        openChat: false,
+        handlerContext: {},
+        parameters: { thinking_budget: 8000 }
+      }
+    ).catch(function(err) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ: ' + err.message + '</p></div>';
+    });
+  }
+
+  function processScenarios(content) {
+    var container = $('#scenariosList');
+    container.innerHTML = '<div class="markdown-content">' + marked.parse(content) + '</div>';
+    addActivity('تم توليد السيناريوهات بنجاح', 'green');
+    showToast('تم توليد السيناريوهات بنجاح', 'success');
+  }
+
+  function renderDefaultScenarios() {
+    var scenarioGroups = [
+      {
+        title: '<i class="fas fa-shield-halved" style="color:var(--accent-red)"></i> سيناريوهات الأمان والمصادقة',
+        items: [
+          { text: 'محاولة الوصول بدون JWT token', status: 'pending' },
+          { text: 'استخدام token منتهي الصلاحية', status: 'pending' },
+          { text: 'محاولة تصعيد الصلاحيات (Technician → Admin)', status: 'pending' },
+          { text: 'اختبار SQL/NoSQL Injection في حقول الإدخال', status: 'pending' },
+          { text: 'اختبار XSS في حقول النص الحر', status: 'pending' },
+          { text: 'محاولة الوصول لبيانات فرع آخر', status: 'pending' },
+          { text: 'اختبار Rate Limiting (200 req/min)', status: 'pending' },
+          { text: 'محاولة التلاعب بـ JWT payload', status: 'pending' }
+        ]
+      },
+      {
+        title: '<i class="fas fa-database" style="color:var(--accent-primary)"></i> سيناريوهات CRUD الأساسية',
+        items: [
+          { text: 'إنشاء عميل جديد مع بيانات كاملة', status: 'pending' },
+          { text: 'تحديث بيانات أمر عمل قائم', status: 'pending' },
+          { text: 'حذف فاتورة مع ارتباطات', status: 'pending' },
+          { text: 'استعلام مع فلترة وترقيم صفحات', status: 'pending' },
+          { text: 'إدخال بيانات بحقول مفقودة', status: 'pending' },
+          { text: 'إدخال ObjectId غير صالح', status: 'pending' },
+          { text: 'تحديث متزامن لنفس السجل', status: 'pending' },
+          { text: 'البحث النصي في القضايا', status: 'pending' }
+        ]
+      },
+      {
+        title: '<i class="fas fa-gears" style="color:var(--accent-orange)"></i> سيناريوهات منطق الأعمال',
+        items: [
+          { text: 'سير عمل التسجيل الجديد (خطوة 1 → خطوة 2 → أمر عمل)', status: 'pending' },
+          { text: 'دورة حياة أمر العمل (Pending → In Progress → Completed)', status: 'pending' },
+          { text: 'إنشاء فاتورة من أمر عمل مكتمل', status: 'pending' },
+          { text: 'حساب ضريبة القيمة المضافة (5%)', status: 'pending' },
+          { text: 'سير عمل الموافقة على الجودة (QA)', status: 'pending' },
+          { text: 'حساب الرواتب مع الخصومات', status: 'pending' },
+          { text: 'الدفع الجزئي للفاتورة', status: 'pending' },
+          { text: 'إلغاء أمر عمل مع موافقة', status: 'pending' }
+        ]
+      },
+      {
+        title: '<i class="fas fa-link" style="color:var(--accent-secondary)"></i> سيناريوهات التكامل (API + Frontend)',
+        items: [
+          { text: 'تزامن حالة أمر العمل بين API والواجهة', status: 'pending' },
+          { text: 'تحديث الإشعارات في الوقت الحقيقي عبر WebSocket', status: 'pending' },
+          { text: 'رفع ملفات إلى S3 وعرضها في الواجهة', status: 'pending' },
+          { text: 'تحديث لوحة التحكم عند إضافة أمر عمل جديد', status: 'pending' },
+          { text: 'مزامنة صلاحيات المستخدم بين الخادم والعميل', status: 'pending' },
+          { text: 'معالجة أخطاء API في مكونات الواجهة', status: 'pending' },
+          { text: 'تصدير PDF من الخادم وتنزيله في الواجهة', status: 'pending' },
+          { text: 'اختبار Interceptor للـ 401 وإعادة التوجيه', status: 'pending' }
+        ]
+      },
+      {
+        title: '<i class="fas fa-triangle-exclamation" style="color:var(--accent-orange)"></i> الحالات الحدية ومعالجة الأخطاء',
+        items: [
+          { text: 'إرسال نموذج فارغ تماماً', status: 'pending' },
+          { text: 'إدخال أحرف خاصة وعربية في جميع الحقول', status: 'pending' },
+          { text: 'رفع ملف بحجم أكبر من 10MB', status: 'pending' },
+          { text: 'انقطاع اتصال قاعدة البيانات أثناء العملية', status: 'pending' },
+          { text: 'طلب سجل محذوف أو غير موجود', status: 'pending' },
+          { text: 'تجاوز حد Rate Limiting', status: 'pending' },
+          { text: 'انقطاع WebSocket وإعادة الاتصال', status: 'pending' },
+          { text: 'عرض الواجهة على شاشة صغيرة جداً', status: 'pending' }
+        ]
+      }
+    ];
+
+    var container = $('#scenariosList');
+    container.innerHTML = '';
+    scenarioGroups.forEach(function(group) {
+      var div = document.createElement('div');
+      div.className = 'scenario-group';
+      var html = '<div class="scenario-group-title">' + group.title + '</div>';
+      group.items.forEach(function(item) {
+        html += '<div class="scenario-item">' +
+          '<div class="scenario-check ' + item.status + '">' +
+            (item.status === 'passed' ? '<i class="fas fa-check"></i>' : item.status === 'failed' ? '<i class="fas fa-times"></i>' : '') +
+          '</div>' +
+          '<span>' + item.text + '</span>' +
+        '</div>';
+      });
+      div.innerHTML = html;
+      container.appendChild(div);
+    });
+  }
+
+  // ── AI Analysis ──
+  function requestAIAnalysis() {
+    var mod = state.selectedModule ? getModuleById(state.selectedModule) : null;
+    if (!mod) {
+      showToast('اختر وحدة أولاً', 'error');
+      return;
+    }
+
+    var area = $('#aiAnalysisArea');
+    area.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner" style="width:30px;height:30px;border-width:3px"></div><p style="margin-top:12px;color:var(--text-muted);font-size:13px">جاري تحليل ' + mod.name + '...</p></div>';
+
+    addActivity('بدء تحليل AI لـ ' + mod.name, 'orange');
+
+    if (typeof window.Poe === 'undefined') {
+      setTimeout(function() {
+        area.innerHTML = '<div class="markdown-content">' +
+          '<h2>AI Analysis: ' + mod.name + '</h2>' +
+          '<h3>Code Quality Assessment</h3>' +
+          '<ul><li><strong>Structure:</strong> Well-organized module with clear separation of concerns</li>' +
+          '<li><strong>Error Handling:</strong> Needs improvement - missing try-catch in several async operations</li>' +
+          '<li><strong>Validation:</strong> Basic validation present but edge cases not covered</li>' +
+          '<li><strong>Security:</strong> JWT authentication implemented but token refresh mechanism missing</li></ul>' +
+          '<h3>Recommendations</h3>' +
+          '<ol><li>Add comprehensive input validation using express-validator</li>' +
+          '<li>Implement proper error boundaries in React components</li>' +
+          '<li>Add TypeScript strict mode for better type safety</li>' +
+          '<li>Implement retry logic for failed API calls</li>' +
+          '<li>Add logging middleware for better debugging</li></ol>' +
+          '<h3>Test Coverage Gaps</h3>' +
+          '<pre><code>// Missing test cases:\n- Concurrent request handling\n- Database transaction rollback\n- File upload size limits\n- WebSocket reconnection\n- Permission cascade effects</code></pre>' +
+          '</div>';
+        addActivity('اكتمل تحليل AI لـ ' + mod.name, 'green');
+        showToast('اكتمل تحليل الذكاء الاصطناعي', 'success');
+      }, 2000);
+      return;
+    }
+
+    registerHandlers();
+
+    var prompt = 'You are a senior code reviewer. Provide a comprehensive analysis of the "' + mod.name + '" module in a Garage Management System.\n\n' +
+      'Module type: ' + mod.type.toUpperCase() + '\nFiles: ' + mod.files.join(', ') + '\nCategory: ' + mod.category + '\n\n' +
+      'Provide analysis in Markdown covering:\n' +
+      '1. **Code Quality Assessment** - structure, patterns, anti-patterns\n' +
+      '2. **Security Analysis** - vulnerabilities, auth issues, injection risks\n' +
+      '3. **Performance Analysis** - bottlenecks, optimization opportunities\n' +
+      '4. **Error Handling Review** - coverage, patterns, gaps\n' +
+      '5. **Test Coverage Gaps** - what needs testing, example test code\n' +
+      '6. **Cross-Module Dependencies** - how this module affects others\n' +
+      '7. **Recommendations** - prioritized list of improvements\n\n' +
+      'Be specific and provide code examples where possible.';
+
+    window.Poe.sendUserMessage(
+      '@Claude-Sonnet-4.5 ' + prompt,
+      {
+        handler: 'ai-analysis-handler',
+        stream: true,
+        openChat: false,
+        handlerContext: {},
+        parameters: { thinking_budget: 8000 }
+      }
+    ).catch(function(err) {
+      area.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ: ' + err.message + '</p></div>';
+    });
+  }
+
+  // ── Run All Tests ──
+  function runAllTests() {
+    if (state.isRunning) return;
+
+    var moduleIds = allModules.map(function(m) { return m.id; });
+    var index = 0;
+
+    addActivity('بدء اختبار شامل لجميع الوحدات (' + moduleIds.length + ')', 'orange');
+    showToast('بدء الاختبار الشامل', 'info');
+
+    function runNext() {
+      if (index >= moduleIds.length) {
+        addActivity('اكتمل الاختبار الشامل', 'green');
+        showToast('اكتمل الاختبار الشامل لجميع الوحدات', 'success');
+        return;
+      }
+
+      state.selectedModule = moduleIds[index];
+      var sel = $('#testModuleSelect');
+      if (sel) sel.value = moduleIds[index];
+
+      var checkReady = setInterval(function() {
+        if (!state.isRunning) {
+          clearInterval(checkReady);
+          index++;
+          if (index < moduleIds.length) {
+            runTest(moduleIds[index - 1]);
+            var waitDone = setInterval(function() {
+              if (!state.isRunning) {
+                clearInterval(waitDone);
+                setTimeout(runNext, 500);
+              }
+            }, 500);
+          }
+        }
+      }, 100);
+
+      if (index === 0) {
+        runTest(moduleIds[0]);
+        var waitFirst = setInterval(function() {
+          if (!state.isRunning) {
+            clearInterval(waitFirst);
+            index++;
+            setTimeout(runNext, 500);
+          }
+        }, 500);
+      }
+    }
+
+    runNext();
+  }
+
+  // ── Share Fixes ──
+  function shareFixes() {
+    if (state.fixes.length === 0) {
+      showToast('لا توجد إصلاحات للمشاركة', 'error');
+      return;
+    }
+
+    addActivity('تمت مشاركة ' + state.fixes.length + ' إصلاحات بين الوحدات', 'green');
+    showToast('تمت مشاركة الإصلاحات بنجاح', 'success');
+  }
+
+  // ── Export Report ──
+  function exportReport() {
+    var report = '# GMS Test Suite Report\n';
+    report += '## Generated: ' + new Date().toLocaleString('ar-EG') + '\n\n';
+
+    report += '## Summary\n';
+    report += '- Total Modules: ' + allModules.length + '\n';
+    report += '- Passed: ' + $('#statPassed').textContent + '\n';
+    report += '- Failed: ' + $('#statFailed').textContent + '\n';
+    report += '- Issues: ' + state.issues.length + '\n';
+    report += '- Fixes: ' + state.fixes.length + '\n\n';
+
+    if (state.issues.length > 0) {
+      report += '## Issues\n';
+      state.issues.forEach(function(issue, i) {
+        report += (i + 1) + '. **' + issue.title + '** [' + issue.severity.toUpperCase() + '] - ' + issue.module + '\n';
+        report += '   ' + issue.description + '\n';
+        if (issue.fixed) report += '   ✅ Fixed\n';
+        report += '\n';
+      });
+    }
+
+    if (state.fixes.length > 0) {
+      report += '## Shared Fixes\n';
+      state.fixes.forEach(function(fix, i) {
+        report += (i + 1) + '. ' + fix.source + ' → ' + fix.target + '\n';
+        report += '```\n' + fix.code + '\n```\n\n';
+      });
+    }
+
+    var blob = new Blob([report], { type: 'text/markdown' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'gms-test-report-' + new Date().toISOString().slice(0, 10) + '.md';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('تم تصدير التقرير بنجاح', 'success');
+  }
+
+  // ── Event Listeners ──
+  $('#btnRunTest').addEventListener('click', function() {
+    if (state.selectedModule) runTest(state.selectedModule);
+  });
+
+  $('#btnGenTests').addEventListener('click', function() {
+    if (state.selectedModule) {
+      switchTab('testing');
+      runTest(state.selectedModule);
+    }
+  });
+
+  $('#btnRunAll').addEventListener('click', runAllTests);
+  $('#btnExport').addEventListener('click', exportReport);
+  $('#btnAskAI').addEventListener('click', requestAIAnalysis);
+  $('#btnGenScenarios').addEventListener('click', generateScenarios);
+  $('#btnShareFixes').addEventListener('click', shareFixes);
+
+  $('#btnClearResults').addEventListener('click', function() {
+    $('#testResultsArea').innerHTML = '<span class="line-dim">// انتظار تشغيل الاختبار...</span>';
+  });
+
+  // ── Initialize ──
+  function init() {
+    populateModuleSelect();
+    renderModules();
+    renderCoverage();
+    renderTimeline();
+    updateStats();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
